@@ -20,25 +20,27 @@ function removeLoadingSpinner() {
 // Get quote from API
 async function getQuote() {
     showLoadingSpinner();
-    const proxyURL = 'https://cors-anywhere.herokuapp.com/'
-    const apiURL = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json'
+    // const proxyURL = 'healthruwords.p.rapidapi.com'
+    const apiURL = 'https://type.fit/api/quotes'
     try {
-        const response = await fetch(proxyURL + apiURL);
-        const data = await response.json();
+        const response = await fetch(apiURL);
+        const allData = await response.json();
+        const quoteNumber = Math.floor(Math.random() * allData.length);
+        const data = allData[quoteNumber];
         // If author is blank add 'Unknown'
-        if (data.authorText === '') {
+        if (data.author === '') {
             authorText.innerHTML = 'Unknown';
         } else {
-            authorText.innerHTML = data.quoteAuthor;
+            authorText.innerHTML = data.text;
         }
-        authorText.innerHTML = data.quoteAuthor;
+        authorText.innerHTML = data.author;
         // Reduce font size for long quotes
-        if (data.quoteText.length > 120) {
+        if (data.text.length > 120) {
             quoteText.classList.add('long-quote');
         } else {
             quoteText.classList.remove('long-quote');
         }
-        quoteText.innerText = data.quoteText;
+        quoteText.innerText = data.text;
         // Stop loader, show quote
         removeLoadingSpinner();
     } catch (error) {
